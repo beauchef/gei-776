@@ -28,6 +28,6 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
                     + " was trying to access protected resource: "
                     + request.getRequestURI());
         }
-        response.sendRedirect(request.getContextPath() + "/access-denied");
+        response.sendRedirect(request.getContextPath() + "/error/access-denied");
     }
 }

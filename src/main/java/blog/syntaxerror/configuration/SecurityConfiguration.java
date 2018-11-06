@@ -2,10 +2,13 @@ package blog.syntaxerror.configuration;
 
 import blog.syntaxerror.web.AccessDeniedHandler;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -13,6 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private AccessDeniedHandler accessDeniedHandler;
@@ -25,8 +29,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/js/**", "/css/**", "/img/**", "/webjars/**").permitAll()
+                    //.antMatchers("/", "/info/**", "/js/**", "/css/**", "/img/**", "/webjars/**").permitAll()
+                    .antMatchers("/**").permitAll()
                     .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                 .exceptionHandling()
+                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.NOT_FOUND))
                     .accessDeniedHandler(accessDeniedHandler);
     }
 

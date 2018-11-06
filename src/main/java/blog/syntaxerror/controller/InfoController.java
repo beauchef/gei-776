@@ -2,20 +2,17 @@ package blog.syntaxerror.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author beauchef on 2018-11-05.
+ * @author beauchef on 2018-11-06.
  */
 @Controller
-public class HomeController {
+@RequestMapping("/info")
+public class InfoController {
 
-    @GetMapping("/")
+    @GetMapping
     public String root() {
-        return "index";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+        return "/info/index";
     }
 }
