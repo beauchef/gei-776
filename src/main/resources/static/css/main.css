@@ -12,6 +12,10 @@
     height: 50px;
 }
 
+.navbar-nav .nav-item.active {
+    background-color: black;
+}
+
 h1 {
     color: #0c0540;
 }

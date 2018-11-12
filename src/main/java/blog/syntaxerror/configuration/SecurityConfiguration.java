@@ -1,6 +1,6 @@
 package blog.syntaxerror.configuration;
 
-import blog.syntaxerror.service.UserDetailsService;
+import blog.syntaxerror.service.UserService;
 import blog.syntaxerror.web.AccessDeniedHandler;
 import blog.syntaxerror.web.AccessDeniedToPageNotFoundEntryPoint;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AccessDeniedHandler accessDeniedHandler;
-    private final UserDetailsService userDetailsService;
+    private final UserService userDetailsService;
 
-    public SecurityConfiguration(AccessDeniedHandler accessDeniedHandler, UserDetailsService userDetailsService) {
+    public SecurityConfiguration(AccessDeniedHandler accessDeniedHandler, UserService userDetailsService) {
         this.accessDeniedHandler = accessDeniedHandler;
         this.userDetailsService = userDetailsService;
     }
