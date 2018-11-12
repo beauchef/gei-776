@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author beauchef on 2018-11-06.
  */
 @Controller
+@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 @RequestMapping("/user")
 public class UserController {
 
     @GetMapping
-    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public String root() {
         return "/user/index";
     }

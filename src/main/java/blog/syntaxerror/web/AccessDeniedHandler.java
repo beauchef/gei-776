@@ -24,9 +24,7 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
-            log.info(auth.getName()
-                    + " was trying to access protected resource: "
-                    + request.getRequestURI());
+            log.info(auth.getName() + " was trying to access protected resource: " + request.getRequestURI());
         }
         response.sendRedirect(request.getContextPath() + "/error/access-denied");
     }

@@ -1,14 +1,17 @@
 package blog.syntaxerror.configuration;
 
+import blog.syntaxerror.service.UserDetailsService;
 import blog.syntaxerror.web.AccessDeniedHandler;
+import blog.syntaxerror.web.AccessDeniedToPageNotFoundEntryPoint;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -19,10 +22,30 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private AccessDeniedHandler accessDeniedHandler;
+    private final AccessDeniedHandler accessDeniedHandler;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(AccessDeniedHandler accessDeniedHandler) {
+    public SecurityConfiguration(AccessDeniedHandler accessDeniedHandler, UserDetailsService userDetailsService) {
         this.accessDeniedHandler = accessDeniedHandler;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(11);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
@@ -47,15 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                 .exceptionHandling()
-                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.NOT_FOUND))
+                    .authenticationEntryPoint(new AccessDeniedToPageNotFoundEntryPoint())
                     .accessDeniedHandler(accessDeniedHandler);
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                    .withUser("user").password("{noop}password").roles("USER")
-                .and()
-                    .withUser("admin").password("{noop}password").roles("ADMIN");
     }
 }

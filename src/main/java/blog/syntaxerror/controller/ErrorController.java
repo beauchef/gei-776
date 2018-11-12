@@ -1,6 +1,6 @@
 package blog.syntaxerror.controller;
 
-import org.springframework.http.HttpStatus;
+import blog.syntaxerror.web.HttpErrorCodeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,21 +18,20 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     @GetMapping
     public String error(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
         if (status != null) {
-            int statusCode = Integer.valueOf(status.toString());
-
-            if(statusCode == HttpStatus.NOT_FOUND.value()) {
-                return "/error/404";
-            }
+            return HttpErrorCodeMapping.getPathForStatusCode(Integer.valueOf(status.toString()));
         }
-
-        return "error";
+        return HttpErrorCodeMapping.DEFAULT_ERROR_PATH;
     }
 
     @GetMapping("/access-denied")
     public String accessDenied() {
-        return "/error/403";
+        return HttpErrorCodeMapping.FORBIDDEN.getPath();
+    }
+
+    @GetMapping("/not-found")
+    public String notFound() {
+        return HttpErrorCodeMapping.NOT_FOUND.getPath();
     }
 
     @Override
