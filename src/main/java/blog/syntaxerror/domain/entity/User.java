@@ -3,17 +3,22 @@ package blog.syntaxerror.domain.entity;
 import blog.syntaxerror.domain.enumeration.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import static lombok.AccessLevel.PRIVATE;
 
 /**
  * @author beauchef on 2018-11-05.
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"posts"})
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(name = "uk_users_email", columnNames = {"email"}),
@@ -41,7 +46,21 @@ public class User extends AbstractAuditable<User, Long> implements UserDetails {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="user_roles", joinColumns = {@JoinColumn(name="user_id")})
     @Column(name="role_name")
-    Collection<Role> authorities;
+     private Collection<Role> authorities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter(PRIVATE)
+    private List<Post> posts = new ArrayList<>();
+
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setUser(this);
+    }
+
+    public void removePost(Post post) {
+        posts.remove(post);
+        post.setUser(null);
+    }
 
     public boolean hasRole(String role) {
         return authorities.stream().anyMatch(r -> role.equals(r.name()));

@@ -5,6 +5,9 @@ import blog.syntaxerror.domain.form.UserForm;
 import blog.syntaxerror.domain.repository.UserRepository;
 import blog.syntaxerror.exception.UserNotFoundException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +32,15 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+    }
+
+    public User getPrincipal() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (auth != null && auth.getPrincipal() != null && auth.getPrincipal() instanceof User) {
+            user = (User)auth.getPrincipal();
+        }
+        return user;
     }
 
     public void deleteUser(long id) {

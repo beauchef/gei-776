@@ -6,8 +6,30 @@
     <title>Secured</title>
 </head>
 <body>
-    <div layout:fragment="content" th:remove="tag">
-        <h1>This is a secured page!</h1>
-    </div>
+<div layout:fragment="content" th:remove="tag">
+    <h1>Posts</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Post Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}">
+            <td th:text="${post.title}">My post</td>
+            <td>
+                <a href="#" th:href="@{/user/post/{id}/edit(id=${post.id})}" class="btn btn-default">
+                    <span class="fas fa-pencil-alt"></span>
+                </a>
+                <a href="#" th:href="@{/user/post/{id}/delete(id=${post.id})}" class="btn btn-default"
+                   onclick="return confirm('Are you sure you want to delete this item?');">
+                    <span class="fas fa-trash-alt"></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
