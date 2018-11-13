@@ -1,17 +1,15 @@
 package blog.syntaxerror.service;
 
 import blog.syntaxerror.domain.entity.User;
-import blog.syntaxerror.domain.enumeration.Role;
 import blog.syntaxerror.domain.form.UserForm;
 import blog.syntaxerror.domain.repository.UserRepository;
-import org.springframework.context.annotation.Lazy;
+import blog.syntaxerror.exception.UserNotFoundException;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,30 +19,29 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final ConversionService conversionService;
 
-    public UserService(UserRepository userRepository, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, ConversionService conversionService) {
         this.userRepository = userRepository;
-        this.passwordEncoder = bCryptPasswordEncoder;
+        this.conversionService = conversionService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException(email);
-        }
-        return user;
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+    }
+
+    public void deleteUser(long id) {
+        userRepository.deleteById(id);
+    }
+
+    public UserForm getUserForm(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return conversionService.convert(user, UserForm.class);
     }
 
     public void saveUser(UserForm userForm) {
-        User user = new User();
-        user.setDisplayName(userForm.getName());
-        user.setEmail(userForm.getEmail());
-        user.setPassword(passwordEncoder.encode(userForm.getPassword()));
-        user.setEnabled(true);
-        user.setAuthorities(Collections.singletonList(Role.ROLE_USER));
-        userRepository.save(user);
+        userRepository.save(conversionService.convert(userForm, User.class));
     }
 
     public List<User> findAll() {

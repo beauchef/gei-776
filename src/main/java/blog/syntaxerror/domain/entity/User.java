@@ -1,10 +1,8 @@
 package blog.syntaxerror.domain.entity;
 
 import blog.syntaxerror.domain.enumeration.Role;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,7 +23,6 @@ public class User extends AbstractAuditable<User, Long> implements UserDetails {
 
     @Id
     @GeneratedValue
-    @Setter(AccessLevel.PROTECTED)
     private Long id;
 
     @Column(name = "password")
@@ -45,6 +42,10 @@ public class User extends AbstractAuditable<User, Long> implements UserDetails {
     @CollectionTable(name="user_roles", joinColumns = {@JoinColumn(name="user_id")})
     @Column(name="role_name")
     Collection<Role> authorities;
+
+    public boolean hasRole(String role) {
+        return authorities.stream().anyMatch(r -> role.equals(r.name()));
+    }
 
     @Override
     public String getUsername() {

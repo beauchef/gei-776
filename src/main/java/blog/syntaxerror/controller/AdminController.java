@@ -2,17 +2,17 @@ package blog.syntaxerror.controller;
 
 import blog.syntaxerror.domain.form.UserForm;
 import blog.syntaxerror.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @author beauchef on 2018-11-06.
  */
+@Slf4j
 @Controller
 @Secured("ROLE_ADMIN")
 @RequestMapping("/admin")
@@ -30,12 +30,26 @@ public class AdminController {
         return "/admin/index";
     }
 
-    @GetMapping("/add-user")
-    public String addUser() {
-        return "/admin/add-user";
+    @GetMapping("/user/{id}/delete")
+    public String deleteUser(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        log.info("Deleting user ID {}.", id);
+        userService.deleteUser(id);
+        return "redirect:/admin";
     }
 
-    @PostMapping("/add-user")
+    @GetMapping("/user/{id}/edit")
+    public String editUser(@PathVariable("id") long id, Model model) {
+        model.addAttribute("user", userService.getUserForm(id));
+        return "/admin/edit-user";
+    }
+
+    @GetMapping("/user/add")
+    public String addUser(Model model) {
+        model.addAttribute("user", new UserForm());
+        return "/admin/edit-user";
+    }
+
+    @PostMapping("/user/save")
     public String saveUser(@ModelAttribute UserForm form) {
         userService.saveUser(form);
         return "redirect:/admin";
