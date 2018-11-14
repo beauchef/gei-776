@@ -1,28 +1,28 @@
 # gei-776
 Projet GEI 776
 
-## Requirements
+## Requis
 
-* Java 1.8
-* Latest version of Docker
+* [Java 1.8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* Dernière version de [Docker](https://store.docker.com/search?type=edition&offering=community)
 
-## Running the app
+## Lancer l'application
 
-First, start the database:
+D'abord, générer le JAR exécutable:
+
+```
+> mvnw package
+```
+
+Ensuite, démarrer les conteneurs Docker:
 
 ```
 > docker-compose up
 ```
 
-Then, start the app:
+## Utiliser l'application
 
-```
-> mvnw spring-boot:run
-```
-
-## Using the app
-
-Go to [http://localhost:8080]() and connect using the following credentials:
+Rendez-vous sur [http://localhost:8080]() et connectez-vous en utilisant l'identifiant suivant:
 
 ```
 User:      admin@syntaxerror.blog
