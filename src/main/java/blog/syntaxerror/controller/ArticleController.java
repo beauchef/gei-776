@@ -13,6 +13,6 @@ public class ArticleController {
 
     @GetMapping
     public String root() {
-        return "/article/index";
+        return "article/index";
     }
 }

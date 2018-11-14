@@ -1,12 +1,32 @@
 version: '2'
 
 services:
-  database:
-    image: postgres:11.0
-    volumes:
-    - postgres:/var/lib/postgresql/data
+  blog:
+    build:
+      context: .
+      dockerfile: springboot.dockerfile
+    depends_on:
+    - postgres
+    environment:
+    - SPRING_PROFILES_ACTIVE=docker
     ports:
-    - "5432:5432"
+    - "8080:8080"
+    networks:
+    - app-network
+  postgres:
+    image: postgres:11.0
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_DB=postgres
+    volumes:
+    - postgres_volume:/var/lib/postgresql/data
+    networks:
+    - app-network
 
 volumes:
-  postgres:
+  postgres_volume:
+
+networks:
+  app-network:
+    driver: bridge

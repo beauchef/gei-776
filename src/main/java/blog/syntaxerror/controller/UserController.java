@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping
     public String root(Model model) {
         model.addAttribute("posts", postService.getPrincipalPosts());
-        return "/user/index";
+        return "user/index";
     }
 
     @GetMapping("/post/{id}/delete")

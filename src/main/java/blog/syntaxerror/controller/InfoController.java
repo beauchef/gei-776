@@ -13,6 +13,6 @@ public class InfoController {
 
     @GetMapping
     public String root() {
-        return "/info/index";
+        return "info/index";
     }
 }
