@@ -7,11 +7,14 @@ import blog.syntaxerror.domain.form.PostForm;
 import blog.syntaxerror.domain.repository.PostRepository;
 import blog.syntaxerror.exception.EntityNotFoundException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 /**
  * @author beauchef on 2018-11-12.
@@ -62,5 +65,9 @@ public class PostService {
             post.setText(postForm.getText());
         }
         return conversionService.convert(postRepository.save(post), PostForm.class);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll(new Sort(DESC, "createdDate"));
     }
 }

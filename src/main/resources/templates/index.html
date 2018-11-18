@@ -7,8 +7,13 @@
 </head>
 <body>
     <<div layout:fragment="content" th:remove="tag">
-        <h1>Hello !</h1>
-        <p>No content for now...</p>
+        <div th:each="post : ${posts}">
+            <a href="/post/display.html" th:href="@{/post/{id}(id=${post.id})}"><h1 th:text="${post.title}">My post</h1></a>
+            <p>
+                Posted by <span th:text="${{post.user.displayName}}">admin</span>
+                on <span th:text="${post.createdDatePretty}">2018-11-14 18:55</span>
+            </p>
+        </div>
     </div>
 </body>
 </html>

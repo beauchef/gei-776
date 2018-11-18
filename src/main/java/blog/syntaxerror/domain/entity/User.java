@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,7 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
         @UniqueConstraint(name = "uk_users_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_users_name", columnNames = {"display_name"})
 })
-public class User extends AbstractAuditable<User, Long> implements UserDetails {
+public class User extends Auditable<User, Long> implements UserDetails {
 
     public User(Long id) {
         this.setId(id);

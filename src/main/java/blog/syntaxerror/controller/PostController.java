@@ -4,28 +4,25 @@ import blog.syntaxerror.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author beauchef on 2018-11-05.
+ * @author beauchef on 2018-11-18.
  */
 @Controller
-public class HomeController {
+@RequestMapping("/post")
+public class PostController {
 
     private final PostService postService;
 
-    public HomeController(PostService postService) {
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 
-    @GetMapping("/")
-    public String root(Model model) {
-        model.addAttribute("posts", postService.findAll());
-        return "index";
-    }
-
-    @RequestMapping("/login")
-    public String login() {
-        return "login";
+    @GetMapping("/{id}")
+    public String display(@PathVariable("id") long id, Model model) {
+        model.addAttribute("post", postService.getPostForm(id));
+        return "post/display";
     }
 }

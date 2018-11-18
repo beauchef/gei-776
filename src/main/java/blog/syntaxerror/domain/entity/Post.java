@@ -3,7 +3,6 @@ package blog.syntaxerror.domain.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -17,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "posts")
-public class Post extends AbstractAuditable<User, Long> {
+public class Post extends Auditable<User, Long> {
 
     public Post(Long id) {
         this.setId(id);
