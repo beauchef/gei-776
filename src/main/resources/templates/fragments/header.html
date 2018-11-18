@@ -14,9 +14,6 @@
                 <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/info') ? 'active':''}">
                     <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/info') ? 'active':''}" href="/info" th:href="@{/info}">Info</a>
                 </li>
-                <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/article') ? 'active':''}">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/article') ? 'active':''}"href="/article" th:href="@{/article}">Article</a>
-                </li>
                 <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}" href="/user" th:href="@{/user}">Secure area</a>
                 </li>

@@ -32,26 +32,29 @@ public class AdminController {
 
     @GetMapping("/user/{id}/delete")
     public String deleteUser(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        log.info("Deleting user ID {}.", id);
         userService.deleteUser(id);
+        log.info("Deleted user ID {}.", id);
         return "redirect:/admin";
     }
 
     @GetMapping("/user/{id}/edit")
     public String editUser(@PathVariable("id") long id, Model model) {
+        log.info("Going to edit form for user ID {}.", id);
         model.addAttribute("user", userService.getUserForm(id));
         return "admin/edit-user";
     }
 
     @GetMapping("/user/add")
     public String addUser(Model model) {
+        log.info("Going to new user creation form.");
         model.addAttribute("user", new UserForm());
         return "admin/edit-user";
     }
 
     @PostMapping("/user/save")
     public String saveUser(@ModelAttribute UserForm form) {
-        userService.saveUser(form);
+        UserForm savedUser = userService.saveUser(form);
+        log.info("Saved user ID {}.", savedUser.getId());
         return "redirect:/admin";
     }
 }

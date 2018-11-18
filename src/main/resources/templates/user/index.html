@@ -8,6 +8,7 @@
 <body>
 <div layout:fragment="content" th:remove="tag">
     <h1>Posts</h1>
+    <p><a class="btn btn-primary" href="#" th:href="@{/user/post/add}" role="button">Add Post</a></p>
     <table class="table">
         <thead>
         <tr>
@@ -23,7 +24,7 @@
                     <span class="fas fa-pencil-alt"></span>
                 </a>
                 <a href="#" th:href="@{/user/post/{id}/delete(id=${post.id})}" class="btn btn-default"
-                   onclick="return confirm('Are you sure you want to delete this item?');">
+                   onclick="return confirm('Are you sure you want to delete this post?');">
                     <span class="fas fa-trash-alt"></span>
                 </a>
             </td>

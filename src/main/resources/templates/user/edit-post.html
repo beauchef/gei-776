@@ -3,15 +3,15 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{fragments/layout}">
 <head>
-    <title th:if="${user.id == null}">Add User</title>
-    <title th:unless="${user.id == null}">Edit User</title>
+    <title th:if="${post.id == null}">Add Post</title>
+    <title th:unless="${post.id == null}">Edit Post</title>
 </head>
 <body>
 <div layout:fragment="content" th:remove="tag">
-    <h1 th:if="${user.id == null}">Add User</h1><h1 th:unless="${user.id == null}">Edit User</h1>
+    <h1 th:if="${post.id == null}">Add Post</h1><h1 th:unless="${post.id == null}">Edit Post</h1>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form th:action="@{/admin/user/save}" th:object="${user}" method="post">
+            <form th:action="@{/user/post/save}" th:object="${post}" method="post">
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">
                         <span th:text="${param.error}">An error occurred.</span>
@@ -22,21 +22,17 @@
                     <input th:field="*{id}" type="hidden" id="id" name="id" class="form-control" autofocus="autofocus" placeholder="ID">
                 </div>
                 <div class="form-group">
-                    <label for="name">Display Name</label>:
-                    <input th:field="*{name}" type="text" id="name" name="name" class="form-control" autofocus="autofocus" placeholder="Display Name">
+                    <label for="title">Title</label>:
+                    <input th:field="*{title}" type="text" id="title" name="title" class="form-control" autofocus="autofocus" placeholder="Title">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>:
-                    <input th:field="*{email}" type="text" id="email" name="email" class="form-control" autofocus="autofocus" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>:
-                    <input th:field="*{password}" type="password" id="password" name="password" class="form-control" placeholder="Password">
+                    <label for="text">Text</label>:
+                    <textarea th:field="*{text}" id="text" name="text" rows = "20" cols = "80" class="form-control" autofocus="autofocus" placeholder="Text"></textarea>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
-                            <input type="submit" name="add-user-submit" id="add-user-submit" class="form-control btn btn-info" value="Save User">
+                            <input type="submit" name="add-post-submit" id="add-post-submit" class="form-control btn btn-info" value="Save Post">
                         </div>
                     </div>
                 </div>
