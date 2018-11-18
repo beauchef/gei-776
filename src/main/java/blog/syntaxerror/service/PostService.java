@@ -40,8 +40,9 @@ public class PostService {
 
     public void deletePost(long id) {
         User principal = userService.getPrincipal();
+        List<Post> principalPosts = getPrincipalPosts(); // FIXME
         if (principal.getAuthorities().contains(Role.ROLE_ADMIN) ||
-                principal.getPosts().stream().map(Post::getId).anyMatch(Long.valueOf(id)::equals)) {
+                principalPosts.stream().map(Post::getId).anyMatch(Long.valueOf(id)::equals)) {
             postRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException(Post.class, id);
