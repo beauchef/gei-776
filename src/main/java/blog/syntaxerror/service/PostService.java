@@ -51,8 +51,16 @@ public class PostService {
     }
 
     public PostForm savePost(PostForm postForm) {
-        Post post = conversionService.convert(postForm, Post.class);
-        post.setUser(userService.getPrincipal());
+        Post post;
+        if (postForm.getId() == null) {
+            post = conversionService.convert(postForm, Post.class);
+            post.setUser(userService.getPrincipal());
+        } else {
+            long id = postForm.getId();
+            post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Post.class, id));
+            post.setTitle(postForm.getTitle());
+            post.setText(postForm.getText());
+        }
         return conversionService.convert(postRepository.save(post), PostForm.class);
     }
 }

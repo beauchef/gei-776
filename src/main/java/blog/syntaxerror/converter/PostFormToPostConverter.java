@@ -13,8 +13,7 @@ public class PostFormToPostConverter implements Converter<PostForm, Post> {
 
     @Override
     public Post convert(PostForm postForm) {
-        Post post = new Post();
-        post.setId(postForm.getId());
+        Post post = new Post(postForm.getId());
         post.setTitle(postForm.getTitle());
         post.setText(postForm.getText());
         return post;

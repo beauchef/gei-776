@@ -3,8 +3,10 @@ package blog.syntaxerror.domain.entity;
 import blog.syntaxerror.domain.enumeration.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -19,16 +21,18 @@ import static lombok.AccessLevel.PRIVATE;
  */
 @Data
 @EqualsAndHashCode(callSuper = false, exclude = {"posts"})
+@NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(name = "uk_users_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_users_name", columnNames = {"display_name"})
 })
 public class User extends AbstractAuditable<User, Long> implements UserDetails {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    public User(Long id) {
+        this.setId(id);
+    }
 
     @Column(name = "password")
     private String password;

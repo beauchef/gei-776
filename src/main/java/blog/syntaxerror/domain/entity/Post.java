@@ -2,6 +2,9 @@ package blog.syntaxerror.domain.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -10,14 +13,15 @@ import javax.persistence.*;
  */
 @Data
 @EqualsAndHashCode(callSuper = false, exclude = {"user"})
+@NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "posts")
-public class Post {
+public class Post extends AbstractAuditable<User, Long> {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
+    public Post(Long id) {
+        this.setId(id);
+    }
     @Column(name = "title")
     private String title;
 

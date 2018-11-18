@@ -24,8 +24,7 @@ public class UserFormToUserConverter implements Converter<UserForm, User> {
 
     @Override
     public User convert(UserForm userForm) {
-        User user = new User();
-        user.setId(userForm.getId());
+        User user = new User(userForm.getId());
         user.setDisplayName(userForm.getName());
         user.setEmail(userForm.getEmail());
         user.setPassword(passwordEncoder.encode(userForm.getPassword()));
