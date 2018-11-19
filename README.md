@@ -1,5 +1,19 @@
 # gei-776
-Projet GEI 776
+
+Le but du projet et de construire une application pour créer un blog.
+Un seul utilisateur est disponible au début. 
+Cet utilisateur à des droits d'administrateur, et pourra créer d'autres utilisateurs
+Mais ceux-ci n'auront pas de droits d'aministrateur.
+Il existe donc 2 roles:
+
+* ADMIN
+* USER
+
+Chaque utilisateur peut poster des articles.
+Le format des articles est le format [MarkDown](https://en.wikipedia.org/wiki/Markdown).
+Chaque utilisateur peut détruire ses articles.
+
+* [Rapport](doc/index.md)
 
 ## Requis
 

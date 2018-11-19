@@ -8,7 +8,7 @@
 <body>
 <div layout:fragment="content" th:remove="tag">
     <h1 th:text="${post.title}">Post Title</h1>
-    <p th:text="${post.text}">Post text...</p>
+    <div th:utext="${post.html}">Post text...</div>
     <p><a href="/" th:href="@{/}">Back to home page</a></p>
 </div>
 </body>

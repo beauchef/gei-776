@@ -11,4 +11,5 @@ public class PostForm {
     private Long id;
     private String title;
     private String text;
+    private String html;
 }
