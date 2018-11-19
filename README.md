@@ -36,7 +36,7 @@ Ensuite, démarrer les conteneurs Docker:
 
 ## Utiliser l'application
 
-Rendez-vous sur [http://localhost:8080]() et connectez-vous en utilisant l'identifiant suivant:
+Rendez-vous sur [http://localhost:8080](http://localhost:8080) et connectez-vous en utilisant l'identifiant suivant:
 
 ```
 User:      admin@syntaxerror.blog
