@@ -34,8 +34,60 @@ TODO: Autres concerns [[OT10]](#ot10)
 ## Pratique #6: Déterminer les exigences de conception
 _SDL Practice #6: Perform Attack Surface Analysis/Reduction_
 
+...
+
 ## Pratique #7: Modélisation de la menace
 _SDL Practice #7: Use Threat Modeling_
+
+La modélisation de la menace a été effectué à l'aide de l'outil [Microsoft Threat Modeling Tool 2016](https://www.microsoft.com/en-us/download/details.aspx?id=49168).
+
+### Diagramme de flux de données
+
+#### DFD niveau 0
+
+![DFD0](dfd/dfd0.jpg)
+
+#### DFD niveau 1: Perspective du lecteur
+
+![DFD1 - Lecteur](dfd/dfd1-lecteur.jpg)
+
+#### DFD niveau 1: Perspective du blogueur
+
+![DFD1 - Blogueur](dfd/dfd1-blogueur.jpg)
+
+#### DFD niveau 1: Perspective de l'administrateur
+
+![DFD1 - Administrateur](dfd/dfd1-administrateur.jpg)
+
+### Identification des menaces
+
+#### Énumération brute des éléments du DFD
+
+| Type d’éléments du DFD | Numéro de l’item du DFD |
+|---| ---|
+| Entités externes | Lecteur (1.0) <br/> Blogueur (2.0) <br/> Administrateur (3.0) |
+| Processus | Consulter Liste d'articles (4.1) <br/> Afficher article (4.2) <br/> Login (4.3) <br/> Consulter ses articles (4.4) <br/> Ajouter un article (4.5) <br/> Modifier un article (4.6) <br/> Effacer un article (4.7) <br/> Consulter liste d'utilisateurs (4.8) <br/> Ajouter utilisateur (4.9) <br/> Modifier utilisateur (4.10) <br/> Effacter utilisateur (4.11)|
+| Dépôts de données | Données articles (4.12) <br/> Données utilisateurs (4.13) |
+| Flux de données | Requête liste articles (1.0 -> 4.1) <br/> Réponse liste articles (4.1 -> 1.0) <br/> Lister articles (4.12 -> 4.1) <br/> Requête afficher article (1.0 -> 4.2) <br/> Réponse afficher article (4.2 -> 1.0) <br/> Afficher article (4.12 -> 4.2) <br/> Requête login blogueur (2.0 -> 4.3) <br/> Réponse login blogueur (4.3 -> 2.0) <br/> Login (4.13 -> 4.3) <br/> Requête consulter ses articles (2.0 -> 4.4) <br/> Réponse consulter ses articles (4.4 -> 2.0) <br/> Consulter ses articles (4.12 -> 4.4) <br/> Requête ajouter un article (2.0 -> 4.5) <br/> Réponse ajouter un article (4.5 -> 2.0) <br/> Ajouter un article (4.5 -> 4.12) <br/> Requête modifier un article (2.0 -> 4.6) <br/> Réponse modifier un article (4.6 -> 2.0) <br/> Obtenir article à modifier (4.12 -> 4.6) <br/> Mettre à jour article (4.6 -> 4.12) <br/> Requête effacer un article (2.0 -> 4.7) <br/> Réponse effacer un article (4.7 -> 2.0) <br/> Détruire article (4.7 -> 4.12) <br/> Requête login administrateur (3.0 -> 4.3) <br/> Réponse login administrateur (4.3 -> 3.0) <br/> Requête consulter la liste des utilisateurs (3.0 -> 4.8) <br/> Réponse consulter la liste des utilisateurs (4.8 -> 3.0) <br/> Consulter la liste des utilisateurs (4.13 -> 4.8) <br/> Requête ajouter un utilisateur (3.0 -> 4.9) <br/> Réponse ajouter un utilisateur (4.9 -> 3.0) <br/> Ajouter un utilisateur (4.9 -> 4.13) <br/> Requête modifier un utilisateur (3.0 -> 4.10) <br/> Réponse modifier un utilisateur (4.10 -> 3.0) <br/> Obtenir utilisateur à modifier (4.13 -> 4.10) <br/> Mettre à jour utilisateur (4.10 -> 4.13) <br/> Requête effacer un utilisateur (3.0 -> 4.11) <br/> Réponse effacer un utilisateur (4.11 -> 3.0) <br/> Détruire utilisateur (4.11 -> 4.13) |
+
+#### Énumération réduite des éléments du DFD
+
+| Type d’éléments du DFD | Numéro de l’item du DFD |
+|---| ---|
+| Entités externes | Lecteur (1.0) <br/> Blogueur (2.0) <br/> Administrateur (3.0) |
+| Processus | Consulter articles (4.1, 4.2) <br/> Login (4.3) <br/> CRUD Articles (4.4, 4.5, 4.6, 4.7) <br/> CRUD utilisateurs (4.8, 4.9, 4.10, 4.11)|
+| Dépôts de données | Données articles (4.12) <br/> Données utilisateurs (4.13) |
+| Flux de données | Requête liste articles (1.0 -> 4.1 -> 1.0) <br/> Lister articles (4.12 -> 4.1) <br/> Requête afficher article (1.0 -> 4.2 -> 1.0) <br/> Afficher article (4.12 -> 4.2) <br/> Requête login blogueur (2.0 -> 4.3 -> 2.0) <br/> Login (4.13 -> 4.3) <br/> Requête consulter ses articles (2.0 -> 4.4 -> 2.0) <br/> Consulter ses articles (4.12 -> 4.4) <br/> Requête ajouter un article (2.0 -> 4.5 -> 2.0) <br/> Ajouter un article (4.5 -> 4.12) <br/> Requête modifier un article (2.0 -> 4.6 -> 2.0) <br/> Modifier article (4.12 -> 4.6 -> 4.12) <br/> Requête effacer un article (2.0 -> 4.7 -> 2.0) <br/> Détruire article (4.7 -> 4.12) <br/> Requête login administrateur (3.0 -> 4.3 -> 3.0) <br/> Requête consulter la liste des utilisateurs (3.0 -> 4.8 -> 3.0) <br/> Consulter la liste des utilisateurs (4.13 -> 4.8) <br/> Requête ajouter un utilisateur (3.0 -> 4.9 -> 3.0) <br/> Ajouter un utilisateur (4.9 -> 4.13) <br/> Requête modifier un utilisateur (3.0 -> 4.10 -> 3.0) <br/> Modifier un utilisateur (4.13 -> 4.10 -> 4.13) <br/> Requête effacer un utilisateur (3.0 -> 4.11 -> 3.0) <br/> Détruire utilisateur (4.11 -> 4.13) |
+
+#### Menaces au système
+
+TODO: déduire les ménaces au système à partir de l'énumération réduite des éléments du DFD.
+
+### Déterminer le risque
+
+...
+
+### Plan d'atténuation
 
 <br/>
 
