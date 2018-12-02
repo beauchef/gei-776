@@ -9,7 +9,7 @@ L'application Web en question sera une plateforme de blogues, et sera déployée
 2. [Exigences (_Requirements_)](2_requirements.md)
 3. [Conception (_Design_)](3_design.md)
 4. [Implémentation (_Implementation_)](4_implementation.md)
-5. Vérification (_Verification_)
+5. [Vérification (_Verification_)](5_verification.md)
 6. Mise en production (_Release_)
 7. Intervention (_Response_)
 
