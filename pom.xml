@@ -30,6 +30,7 @@
         <!-- plug-ins -->
         <jacoco.version>0.8.2</jacoco.version>
         <maven.azure.version>1.5.1</maven.azure.version>
+        <maven.azure-jaxb.version>2.3.1</maven.azure-jaxb.version>
         <maven.release.version>2.5.3</maven.release.version>
     </properties>
 
@@ -162,6 +163,7 @@
                     <dependency>
                         <groupId>javax.xml.bind</groupId>
                         <artifactId>jaxb-api</artifactId>
+                        <version>${maven.azure-jaxb.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
