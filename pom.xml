@@ -158,6 +158,12 @@
                 <groupId>com.microsoft.azure</groupId>
                 <artifactId>azure-webapp-maven-plugin</artifactId>
                 <version>${maven.azure.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <authentication>
                         <serverId>azure-auth</serverId>
