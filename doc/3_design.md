@@ -44,22 +44,38 @@ _SDL Practice #6: Perform Attack Surface Analysis/Reduction_
 ### Analyse de la surface d'attaque
 _Attack Surface Analysis (ASA)_
 
-* Le serveur HTTP peut écouter sur les ports 80 et 443
+* L'application peut écouter sur les ports 80 et 443
 * L'application Spring Boot devra répondre aux requêtes HTTP
 * Des resources statiques (images) devront être disponibles
 * Une base de données s'occupera de stocker l'information 
+* La base de données devra être accessible pour la maintenance et l'administration
 
 ### Réduction de la surface d'attaque
 _Attack Surface Reduction (ASR)_
 
-* Le serveur HTTP sera accessible de l'externe
+* L'application sera accessible de l'externe
 * Le serveur HTTP devra rediriger le traffic HTTP vers HTTPS
 * Seuls les ports 80 et 443 seront disponibles de l'externe
-* L'application Java Spring Boot sera accessible au serveur HTTP, mais pas à l'externe
-* Seul le port de l'application Java Spring Boot sera disponible pour le serveur HTTP (typiquement 8080)
 * La base données sera accessible à l'application Java Spring Boot, mais pas du serveur HTTP
 * Seul le port de PostgreSQL sera accessible à l'application Java Spring Boot (typiquement 5432)
-* L'utilisateur `root` ne sera pas utilisé pour exécuter les processus (serveur HTTP, application Java, PostgreSQL)
+* TODO: Gestion de la BD?
+* L'utilisateur `root` ne sera pas utilisé pour exécuter les processus (application Java, PostgreSQL)
+
+#### Installation d'un certificat SSL
+
+Un fichier de format PFX a été créé à l'aide de Open SSL, en utilisant les fichiers suivants:
+* La clé pour le domaine `syntaxerror.blog` fourni par Comodo
+* Le certificat pour le domaine `syntaxerror.blog` fourni par Comodo
+* Le certificat racine (Root certificate) et intermédiaires fournis par Comodo pour le certificat PositiveSSL [[COMO]](#como)
+```
+openssl pkcs12 -export -out syntaxerror.blog.pfx -inkey syntaxerror.blog.key -in syntaxerror.blog.crt -certfile comodorsadomainvalidationsecureserverca.crt -certfile comodorsaaddtrustca.crt -certfile addtrustexternalcaroot.crt
+```
+
+#### Imposer le traffic HTTPS
+
+Le fichier PFX est importé sur Azure, et assigné à l'application dans la section "SSL Settings". Il est ensuite possible de demander de rediriger le traffic HTTP vers HTTPS dans l'écran de configuration "Custom domains".
+
+![Azure Configuration - HTTPS Only](img/3_https_only.jpg)
 
 ## Pratique #7: Modélisation de la menace
 _SDL Practice #7: Use Threat Modeling_
@@ -148,6 +164,7 @@ Finalement, on en déduit les ménaces au système à partir de l'énumération 
 ###### Références
 |||
 |---| ---|
+|[COMO] | <a name="como"></a>[Comodo Knoledge Base: Which is Root? Which is Intermediate?](https://support.comodo.com/index.php?/Knowledgebase/Article/View/620/0/which-is-root-which-is-intermediate), Comodo |
 |[OT10] | <a name="ot10"></a>[OWASP Top 10 - 2017](https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf), OWASP|
 |[MSCR] | <a name="mscr"></a>[Microsoft SDL Cryptographic Recommendations](http://download.microsoft.com/download/6/3/A/63AFA3DF-BB84-4B38-8704-B27605B99DA7/Microsoft%20SDL%20Cryptographic%20Recommendations.pdf), Microsoft|
 |[PSCS] | <a name="pscs"></a>[Password Storage Cheat Sheet](https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet), OWASP|

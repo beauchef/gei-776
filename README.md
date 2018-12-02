@@ -2,7 +2,7 @@
 
 [![Run Status](https://img.shields.io/shippable/5c02fc4f0dd1c207005ee971/master.svg)](https://app.shippable.com/projects/5c02fc4f0dd1c207005ee971)
 [![codecov](https://img.shields.io/codecov/c/github/beauchef/gei-776.svg)](https://codecov.io/gh/beauchef/gei-776)
-[![gei-776](https://img.shields.io/badge/homepage-gei--776-blue.svg)](http://syntaxerror-app.azurewebsites.net/)
+[![gei-776](https://img.shields.io/badge/homepage-gei--776-blue.svg)](http://syntaxerror.blog)
 
 Le but du projet et de construire une application pour créer un blog.
 Un seul utilisateur est disponible au début. 
