@@ -1,0 +1,43 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+branches:
+  only:
+    - master
+
+# Encrypted values for codecov.io and azure.com
+env:
+  global:
+    - APP_NAME=syntaxerror-blog
+    # CODECOV_TOKEN
+    - secure: d7bkH4IJCLB9WGW5jHd07N612/YpqlDng6meQjGZ891VZcjFGYOAiOpc57T8evUG/RAoow036hfwk+nZxEdHXVFf3kmHmrWgU1wt61JkGh8xPIbPb10/JoEzYVneqiiCZzZG42FpQqsDIP8+hDfc5zJEUEyp/0B0/W6yedXPUvC7ZarxqTlrM8K0gIw9NZXAMufCMjoD8mXYPox53a51Gwj999rIk/BsppPOr0Y7JeVtovzFJE6oyug58vjWRMeN8r/kqW254JB+/BYisAvCbHCejKv0AZJFNrGnrdmw7yh8ldBWb9V72iA5BzGtLkRo38fEAK0EJorC1IGZBj9oKQ==
+    # AZURE_CLIENT
+    - secure: kRx9fWBsSui7BajtdQVXE8oaZ4LVfTrv+TknHIOaPKuJQZ+3cSOEw4T4IW1Hz1am2tU1nrtid5ffyTOQgJdVDxVYY6RJC+vjq1faXvIQSySYtwstok7ZbM6O0GOiFJSjE/Hc+Ss0cWH3JJT1XEBkxljg48FolrhhyjZ+kR73+tidyfRlCUJDswAY5psWRvu0c/f+Yat7TZDiDzxUXAOYa8pEJE2qbYSX7aKKd9fxmE9U3pagE0wvrCvC+2KsaADB4q0QP6hZmJ1ljhbByQmHAXorgdyENxiGA4Inopxg14u1DUby6s8zbr+4gzoM75znAyiIEfDlI2eMzb9vqzRRSQ==
+    # AZURE_TENANT
+    - secure: hTmlDqu/q0+tJ+rJwMz9EiP31jwg76I5eBY5c0sZ2WXU/7mpar/b77Rq8RA95m3rQE0TRvi1Hd4khicd/dOkN6ndUs0qgOlZ2/nKfBYRAUe4Y0rq0bQuta4TnbOw4J78W0jCp/o56XIQ/igEU6NbuSlUOjqZNS2MUry6ZIjBI8EGTJJ/GnMK13GmmoOQ8AYYE8tLZW0wXyAfFdwiM8xsqewlIAyzfH7z055cp3v3vcpQufAb/f2RhWZLTUGJijc4ZMk0GtEDXo04X2VPiSRF8NAi9lvx5fmu4dt5n2jWB0WRXsrRAtFdGHlxmI/dQ0rJJuiTgEiWJ2cvAkIPbBvnyQ==
+    # AZURE_KEY
+    - secure: JDR30WNraP6Xwnex8kdfHm5537ri7ACS8LnIdnyPj6yYYTEJ4B7XTUIuM319ljHn6M3wI2M4bxbtvOWbuwFvBfPBmLjp/F6gXf7N29FRf9F/6TkjIMvknjJhFC+/e2zwLLC4PmDyTXauoog4PO/wEWUc/fXxWIj5gYaF0zy2X8xhSuVZ6WQ3wrSs4Zj3M6zfZAJ5Z7A8gGY4LUJ7e1QB0MGriWcaJPn8Se0b0imVo+r9MTWzPSTeAjL2YuFXiWca5dskbYdgZE3YlJSC/3jB5s0g7aV2oQ/bKPbLgbrSbmntJTxg99ybmCqFZSyf7zo3E1PfwOE+YsBNinRoAyS6Dw==
+
+before_install:
+  - mkdir -p ~/.m2
+  - echo "<settings><servers><server><id>azure-auth</id><configuration>
+    <client>$AZURE_CLIENT</client>
+    <tenant>$AZURE_TENANT</tenant>
+    <key>$AZURE_KEY</key>
+    <environment>AZURE</environment>
+    </configuration></server></servers></settings>" > ~/.m2/settings.xml
+
+build:
+  ci:
+    - echo "Building branch '$BRANCH'..."
+    - mvn clean install
+  on_success:
+    - echo "Sending code coverage information to CodeCov..."
+    - cd target/site/jacoco
+    - curl -s https://codecov.io/bash > codecov.sh
+    - bash ./codecov.sh -t $CODECOV_TOKEN
+    - cd ../../../
+    - echo "Deploying application to Azure..."
+    - mvn azure-webapp:deploy

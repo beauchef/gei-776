@@ -5,6 +5,13 @@ Cette section couvre la phase 3 du cadre de développement SDL, soit la concepti
 ## Pratique #5: Déterminer les exigences de conception 
 _SDL Practice #5: Establish Design Requirements_
 
+### Architecture de l'application à haut hiveau
+
+L'application sera constituer des composants suivants:
+* Serveur HTTP (Apache)
+* Application Java (application Spring Boot JAR exécutable)
+* Base de données (PostgreSQL) 
+
 ### Hachage de mot de passe
 
 Microsoft ne fait pas de recommendation quant au hachage de mot de passe [[MSCR]](#mscr).
@@ -31,10 +38,28 @@ TODO: Autres concerns [[OT10]](#ot10)
 * Script intersites (_Cross-site scripting_)?
 * Autres menaces?
 
-## Pratique #6: Déterminer les exigences de conception
+## Pratique #6: Analyse et réducation de la surface d'attaque
 _SDL Practice #6: Perform Attack Surface Analysis/Reduction_
 
-...
+### Analyse de la surface d'attaque
+_Attack Surface Analysis (ASA)_
+
+* Le serveur HTTP peut écouter sur les ports 80 et 443
+* L'application Spring Boot devra répondre aux requêtes HTTP
+* Des resources statiques (images) devront être disponibles
+* Une base de données s'occupera de stocker l'information 
+
+### Réduction de la surface d'attaque
+_Attack Surface Reduction (ASR)_
+
+* Le serveur HTTP sera accessible de l'externe
+* Le serveur HTTP devra rediriger le traffic HTTP vers HTTPS
+* Seuls les ports 80 et 443 seront disponibles de l'externe
+* L'application Java Spring Boot sera accessible au serveur HTTP, mais pas à l'externe
+* Seul le port de l'application Java Spring Boot sera disponible pour le serveur HTTP (typiquement 8080)
+* La base données sera accessible à l'application Java Spring Boot, mais pas du serveur HTTP
+* Seul le port de PostgreSQL sera accessible à l'application Java Spring Boot (typiquement 5432)
+* L'utilisateur `root` ne sera pas utilisé pour exécuter les processus (serveur HTTP, application Java, PostgreSQL)
 
 ## Pratique #7: Modélisation de la menace
 _SDL Practice #7: Use Threat Modeling_
@@ -81,7 +106,36 @@ La modélisation de la menace a été effectué à l'aide de l'outil [Microsoft 
 
 #### Menaces au système
 
-TODO: déduire les ménaces au système à partir de l'énumération réduite des éléments du DFD.
+Le modèle STRIDE va nous permettre de déterminer plus précisément quels sont les menaces au système. L'acronyme STRIDE signifit:
+* _Spoofing_ (mystification)
+* _Tampering_ (altération)
+* _Repudiation_ (répudiation)
+* _Information Disclosure_ (divulgation d'informations)
+* _Denial of Service_ (déni de service)
+* _Elevation of Privilege_ (élévation de privilège)
+
+On peut établir les correspondantes suivantes aux menaces du modèle STRIDE:
+
+| Type d’éléments du DFD | S | T | R | I | D | E |
+|---|---|---|---|---|---|---|
+| Entités externes  | X |   | X |   |   |   |
+| Processus         |   | X |   | X | X |   |
+| Dépôts de données |   | X | + | X | X |   |
+| Flux de données   | X | X | X | X | X | X |
+
+_+ Note: les dépôts de données affectés par la répudiation sont les logs d'audit. Étant donné la taille du projet, je n'en prendrais pas compte._
+
+Finalement, on en déduit les ménaces au système à partir de l'énumération réduite des éléments du DFD.
+
+| Type de menace STRIDE | Numéros des items du DFD impliqués |
+|---| ---|
+| _Spoofing_ | Entités externes: (1.0), (2.0), (3.0) <br/> Processus: (4.1, 4.2), (4.3), (4.4, 4.5, 4.6, 4.7), (4.8, 4.9, 4.10, 4.11) |
+| _Tampering_ | Processus: (4.1, 4.2), (4.3), (4.4, 4.5, 4.6, 4.7), (4.8, 4.9, 4.10, 4.11) <br/> Dépôts de données: (4.12), (4.13) <br/> Flux de données: (1.0 -> 4.1 -> 1.0), (4.12 -> 4.1), (1.0 -> 4.2 -> 1.0), (4.12 -> 4.2), (2.0 -> 4.3 -> 2.0), (4.13 -> 4.3), (2.0 -> 4.4 -> 2.0), (4.12 -> 4.4), (2.0 -> 4.5 -> 2.0), (4.5 -> 4.12), (2.0 -> 4.6 -> 2.0), (4.12 -> 4.6 -> 4.12), (2.0 -> 4.7 -> 2.0), (4.7 -> 4.12), (3.0 -> 4.3 -> 3.0), (3.0 -> 4.8 -> 3.0), (4.13 -> 4.8), (3.0 -> 4.9 -> 3.0), (4.9 -> 4.13), (3.0 -> 4.10 -> 3.0), (4.13 -> 4.10 -> 4.13), (3.0 -> 4.11 -> 3.0), (4.11 -> 4.13) |
+| _Repudiation_ | Entités externes: (1.0), (2.0), (3.0) |
+| _Information Disclosure_ | Processus: (4.1, 4.2), (4.3), (4.4, 4.5, 4.6, 4.7), (4.8, 4.9, 4.10, 4.11) <br/> Dépôts de données: (4.12), (4.13) <br/> Flux de données: (1.0 -> 4.1 -> 1.0), (4.12 -> 4.1), (1.0 -> 4.2 -> 1.0), (4.12 -> 4.2), (2.0 -> 4.3 -> 2.0), (4.13 -> 4.3), (2.0 -> 4.4 -> 2.0), (4.12 -> 4.4), (2.0 -> 4.5 -> 2.0), (4.5 -> 4.12), (2.0 -> 4.6 -> 2.0), (4.12 -> 4.6 -> 4.12), (2.0 -> 4.7 -> 2.0), (4.7 -> 4.12), (3.0 -> 4.3 -> 3.0), (3.0 -> 4.8 -> 3.0), (4.13 -> 4.8), (3.0 -> 4.9 -> 3.0), (4.9 -> 4.13), (3.0 -> 4.10 -> 3.0), (4.13 -> 4.10 -> 4.13), (3.0 -> 4.11 -> 3.0), (4.11 -> 4.13) |
+| _Denial of Service_ | Processus: (4.1, 4.2), (4.3), (4.4, 4.5, 4.6, 4.7), (4.8, 4.9, 4.10, 4.11) <br/> Dépôts de données: (4.12), (4.13) <br/> Flux de données: (1.0 -> 4.1 -> 1.0), (4.12 -> 4.1), (1.0 -> 4.2 -> 1.0), (4.12 -> 4.2), (2.0 -> 4.3 -> 2.0), (4.13 -> 4.3), (2.0 -> 4.4 -> 2.0), (4.12 -> 4.4), (2.0 -> 4.5 -> 2.0), (4.5 -> 4.12), (2.0 -> 4.6 -> 2.0), (4.12 -> 4.6 -> 4.12), (2.0 -> 4.7 -> 2.0), (4.7 -> 4.12), (3.0 -> 4.3 -> 3.0), (3.0 -> 4.8 -> 3.0), (4.13 -> 4.8), (3.0 -> 4.9 -> 3.0), (4.9 -> 4.13), (3.0 -> 4.10 -> 3.0), (4.13 -> 4.10 -> 4.13), (3.0 -> 4.11 -> 3.0), (4.11 -> 4.13) |
+| _Elevation of Privilege_ | Processus: (4.1, 4.2), (4.3), (4.4, 4.5, 4.6, 4.7), (4.8, 4.9, 4.10, 4.11) |
+
 
 ### Déterminer le risque
 
