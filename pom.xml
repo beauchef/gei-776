@@ -31,6 +31,7 @@
         <jacoco.version>0.8.2</jacoco.version>
         <maven.azure.version>1.5.1</maven.azure.version>
         <maven.azure-jaxb.version>2.3.1</maven.azure-jaxb.version>
+        <maven.owasp-dependency-check.version>4.0.0</maven.owasp-dependency-check.version>
         <maven.release.version>2.5.3</maven.release.version>
     </properties>
 
@@ -89,7 +90,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -151,6 +152,22 @@
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${maven.owasp-dependency-check.version}</version>
+                <configuration>
+                    <failBuildOnCVSS>6</failBuildOnCVSS>
+                    <suppressionFile>suppressed-cves.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>

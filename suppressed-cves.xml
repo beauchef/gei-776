@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd">
+    <suppress>
+        <notes>
+            <![CDATA[
+            Suppress any spring-dev-tools cve (since it is not packaged in executable JAR)
+            ]]>
+        </notes>
+        <gav regex="true">org\.springframework\.boot:spring-boot-devtools.*</gav>
+        <cvssBelow>10</cvssBelow>
+    </suppress>
+</suppressions>
