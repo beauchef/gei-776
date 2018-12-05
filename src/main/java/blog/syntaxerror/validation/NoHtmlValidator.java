@@ -1,7 +1,7 @@
 package blog.syntaxerror.validation;
 
 import blog.syntaxerror.service.HtmlService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -9,17 +9,11 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author beauchef on 2018-12-04.
  */
+@Component
 public class NoHtmlValidator implements ConstraintValidator<NoHtml, String> {
-
-    private final HtmlService htmlService;
-
-    @Autowired
-    public NoHtmlValidator(HtmlService htmlService) {
-        this.htmlService = htmlService;
-    }
 
     @Override
     public boolean isValid(String input, ConstraintValidatorContext constraintValidatorContext) {
-        return htmlService.removeHtml(input).equals(input);
+        return new HtmlService().removeHtml(input).equals(input);
     }
 }

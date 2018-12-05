@@ -26,11 +26,14 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final ConversionService conversionService;
+    private final HtmlService htmlService;
 
-    public PostService(PostRepository postRepository, UserService userService, ConversionService conversionService) {
+    public PostService(PostRepository postRepository, UserService userService, ConversionService conversionService,
+                       HtmlService htmlService) {
         this.postRepository = postRepository;
         this.userService = userService;
         this.conversionService = conversionService;
+        this.htmlService = htmlService;
     }
 
     public List<Post> getPrincipalPosts() {
@@ -55,6 +58,7 @@ public class PostService {
     }
 
     public PostForm savePost(PostForm postForm) {
+        postForm.setText(htmlService.removeHtml(postForm.getText()));
         Post post;
         if (postForm.getId() == null) {
             post = conversionService.convert(postForm, Post.class);

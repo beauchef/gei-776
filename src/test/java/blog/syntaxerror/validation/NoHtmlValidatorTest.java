@@ -1,6 +1,5 @@
 package blog.syntaxerror.validation;
 
-import blog.syntaxerror.service.HtmlService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,7 @@ public class NoHtmlValidatorTest {
 
     @Before
     public void setup() {
-        validator = new NoHtmlValidator(new HtmlService());
+        this.validator = new NoHtmlValidator();
     }
 
     @Test

@@ -1,18 +1,22 @@
 package blog.syntaxerror.controller;
 
 import blog.syntaxerror.web.HttpErrorCodeMapping;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 /**
  * @author beauchef on 2018-11-06.
  */
+@Slf4j
 @Controller
+@ControllerAdvice
 @RequestMapping("/error")
 public class ErrorHandlingController implements ErrorController {
 
@@ -38,5 +42,11 @@ public class ErrorHandlingController implements ErrorController {
     @Override
     public String getErrorPath() {
         return "/error";
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public void handleConstraintViolation() {
+        log.error("ConstraintViolationException exception occurred...");
     }
 }
