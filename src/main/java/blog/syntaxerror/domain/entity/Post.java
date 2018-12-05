@@ -1,5 +1,6 @@
 package blog.syntaxerror.domain.entity;
 
+import blog.syntaxerror.validation.NoHtml;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Post extends Auditable<User, Long> {
     @Column(name = "title")
     private String title;
 
+    @NoHtml
     @Column(name = "text", length = 50_000)
     private String text;
 

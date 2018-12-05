@@ -23,9 +23,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
+        <!-- quality gates -->
+        <quality-gate.coverage-ratio.line>0.30</quality-gate.coverage-ratio.line> <!-- should be 0.80 -->
+        <quality-gate.coverage-ratio.instruction>0.10</quality-gate.coverage-ratio.instruction> <!-- should be 0.70 -->
+        <quality-gate.dependencies.min-cvss-score>6</quality-gate.dependencies.min-cvss-score> <!-- between 0 and 10 -->
+
         <!-- dependencies -->
-        <thymeleaf-layout.version>2.3.0</thymeleaf-layout.version>
         <commonmark.version>0.12.1</commonmark.version>
+        <htmlcleaner.version>2.22</htmlcleaner.version>
+        <thymeleaf-layout.version>2.3.0</thymeleaf-layout.version>
 
         <!-- plug-ins -->
         <jacoco.version>0.8.2</jacoco.version>
@@ -85,6 +91,11 @@
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>${commonmark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlcleaner</groupId>
+            <artifactId>htmlcleaner</artifactId>
+            <version>${htmlcleaner.version}</version>
         </dependency>
 
         <dependency>
@@ -154,6 +165,32 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${quality-gate.coverage-ratio.line}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${quality-gate.coverage-ratio.instruction}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -161,7 +198,7 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${maven.owasp-dependency-check.version}</version>
                 <configuration>
-                    <failBuildOnCVSS>6</failBuildOnCVSS>
+                    <failBuildOnCVSS>${quality-gate.dependencies.min-cvss-score}</failBuildOnCVSS>
                     <suppressionFile>suppressed-cves.xml</suppressionFile>
                 </configuration>
                 <executions>
@@ -190,7 +227,7 @@
                     <resourceGroup>syntaxerror-resource-group</resourceGroup>
                     <appName>syntaxerror-app</appName>
                     <region>eastus</region>
-                    <javaVersion>1.8</javaVersion>
+                    <javaVersion>${java.version}</javaVersion>
                     <deploymentType>ftp</deploymentType>
                     <stopAppDuringDeployment>true</stopAppDuringDeployment>
                     <resources>
