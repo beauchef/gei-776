@@ -1,7 +1,6 @@
 package blog.syntaxerror.controller;
 
 import blog.syntaxerror.domain.form.PostForm;
-import blog.syntaxerror.domain.form.UserForm;
 import blog.syntaxerror.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;

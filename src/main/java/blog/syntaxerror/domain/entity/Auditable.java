@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * @author beauchef on 2018-11-18.
  */
-public abstract class Auditable<U, PK extends Serializable> extends AbstractAuditable<U, PK> {
+public abstract class Auditable<U, K extends Serializable> extends AbstractAuditable<U, K> {
 
     public String getCreatedDatePretty() {
         return DateUtils.formatDateTime(getCreatedDate());

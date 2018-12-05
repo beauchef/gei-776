@@ -13,7 +13,7 @@ public enum HttpErrorCodeMapping {
     FORBIDDEN(403, "/error/403"),
     NOT_FOUND(404, "/error/404");
 
-    public final static String DEFAULT_ERROR_PATH = "error";
+    public static final String DEFAULT_ERROR_PATH = "error";
 
     @Getter
     private int statusCode;

@@ -1,7 +1,7 @@
 package blog.syntaxerror.configuration;
 
 import blog.syntaxerror.service.UserService;
-import blog.syntaxerror.web.AccessDeniedHandler;
+import blog.syntaxerror.web.AccessDeniedExceptionHandler;
 import blog.syntaxerror.web.AccessDeniedToPageNotFoundEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +22,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final AccessDeniedHandler accessDeniedHandler;
+    private final AccessDeniedExceptionHandler accessDeniedHandler;
     private final UserService userDetailsService;
 
-    public SecurityConfiguration(AccessDeniedHandler accessDeniedHandler, UserService userDetailsService) {
+    public SecurityConfiguration(AccessDeniedExceptionHandler accessDeniedHandler, UserService userDetailsService) {
         this.accessDeniedHandler = accessDeniedHandler;
         this.userDetailsService = userDetailsService;
     }
