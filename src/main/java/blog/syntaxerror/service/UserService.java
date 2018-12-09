@@ -37,10 +37,15 @@ public class UserService implements UserDetailsService {
 
     public User getPrincipal() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() != null && auth.getPrincipal() instanceof User) {
-            return (User)auth.getPrincipal();
+        if (auth == null) {
+            throw new IllegalStateException("No authentication.");
+        } else if (auth.getPrincipal() == null) {
+            throw new IllegalStateException("No principal.");
+        } else if (!(auth.getPrincipal() instanceof User)) {
+            throw new IllegalStateException("Principal is not of type User.");
         } else {
-            throw new IllegalStateException("Could find a principal.");
+            return userRepository.findByEmail(((User)auth.getPrincipal()).getEmail())
+                    .orElseThrow(() -> new IllegalStateException("Could not find principal."));
         }
     }
 

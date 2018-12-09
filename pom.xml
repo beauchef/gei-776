@@ -227,6 +227,7 @@
                     <resourceGroup>syntaxerror-resource-group</resourceGroup>
                     <appName>syntaxerror-app</appName>
                     <region>eastus</region>
+                    <pricingTier>D1</pricingTier>
                     <javaVersion>${java.version}</javaVersion>
                     <deploymentType>ftp</deploymentType>
                     <stopAppDuringDeployment>true</stopAppDuringDeployment>

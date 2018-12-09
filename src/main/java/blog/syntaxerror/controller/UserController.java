@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Slf4j
 @Controller
-@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+@Secured("ROLE_USER")
 @RequestMapping("/user")
 public class UserController {
 
