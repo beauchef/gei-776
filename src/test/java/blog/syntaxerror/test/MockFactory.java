@@ -2,8 +2,8 @@ package blog.syntaxerror.test;
 
 import blog.syntaxerror.domain.entity.User;
 import blog.syntaxerror.domain.enumeration.Role;
-import blog.syntaxerror.domain.form.PostForm;
-import blog.syntaxerror.domain.form.UserForm;
+import blog.syntaxerror.domain.form.MockPostForm;
+import blog.syntaxerror.domain.form.MockUserForm;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,16 +40,16 @@ public class MockFactory {
         return admin;
     }
 
-    public static UserForm userForm(String email) {
-        UserForm form = new UserForm();
+    public static MockUserForm userForm(String email) {
+        MockUserForm form = new MockUserForm();
         form.setEmail(email);
         form.setName("New User");
         form.setPassword("new_password");
         return form;
     }
 
-    public static PostForm postForm() {
-        PostForm form = new PostForm();
+    public static MockPostForm postForm() {
+        MockPostForm form = new MockPostForm();
         form.setTitle("Post title");
         form.setText("# Post\nThis is a post...");
         return form;

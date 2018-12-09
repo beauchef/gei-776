@@ -7,7 +7,7 @@ branches:
   only:
     - master
 
-# Encrypted values for codecov.io and azure.com
+# Encrypted values for sonarcloud.io, codecov.io and azure.com
 env:
   global:
     - APP_NAME=syntaxerror-blog
