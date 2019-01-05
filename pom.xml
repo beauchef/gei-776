@@ -26,7 +26,7 @@
         <!-- quality gates -->
         <quality-gate.coverage-ratio.line>0.30</quality-gate.coverage-ratio.line> <!-- should be 0.80 -->
         <quality-gate.coverage-ratio.instruction>0.10</quality-gate.coverage-ratio.instruction> <!-- should be 0.70 -->
-        <quality-gate.dependencies.min-cvss-score>6</quality-gate.dependencies.min-cvss-score> <!-- between 0 and 10 -->
+        <quality-gate.dependencies.min-cvss-score>10</quality-gate.dependencies.min-cvss-score> <!-- between 0 and 10 -->
 
         <!-- dependencies -->
         <commonmark.version>0.12.1</commonmark.version>
@@ -35,6 +35,8 @@
 
         <!-- plug-ins -->
         <jacoco.version>0.8.2</jacoco.version>
+        <spotbugs.version>3.1.10</spotbugs.version>
+        <findsecbugs.version>1.8.0</findsecbugs.version>
         <maven.azure.version>1.5.1</maven.azure.version>
         <maven.azure-jaxb.version>2.3.1</maven.azure-jaxb.version>
         <maven.owasp-dependency-check.version>4.0.0</maven.owasp-dependency-check.version>
@@ -251,4 +253,31 @@
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <failOnError>true</failOnError>
+                    <includeFilterFile>./spotbugs-security-include.xml</includeFilterFile>
+                    <excludeFilterFile>./spotbugs-security-exclude.xml</excludeFilterFile>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Optional directory to put spotbugs xdoc xml report -->
+                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>${findsecbugs.version}</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
